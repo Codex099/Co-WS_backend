@@ -1,4 +1,4 @@
-from fake_data import (users_db, locations_db, rooms_db, bookings_db, 
+from old.fake_data import (users_db, locations_db, rooms_db, bookings_db, 
                              recharges_db, expenses_db, User, Location, Room, 
                              Booking, Recharge, Expense, generate_time_slots)
 

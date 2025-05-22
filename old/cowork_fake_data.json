@@ -1,0 +1,374 @@
+{
+    "users": {
+        "1": {
+            "id": 1,
+            "name": "Admin",
+            "email": "admin@cowork.com",
+            "password": "admin123",
+            "role": "admin",
+            "balance": 1000.0
+        },
+        "2": {
+            "id": 2,
+            "name": "Ahmed",
+            "email": "ahmed@example.com",
+            "password": "password123",
+            "role": "user",
+            "balance": 500.0
+        },
+        "3": {
+            "id": 3,
+            "name": "Sara",
+            "email": "sara@example.com",
+            "password": "password123",
+            "role": "user",
+            "balance": 300.0
+        },
+        "4": {
+            "id": 4,
+            "name": "Khaled",
+            "email": "mohamed@example.com",
+            "password": "password123",
+            "role": "user",
+            "balance": 150.0
+        },
+        "5": {
+            "id": 5,
+            "name": "Akram",
+            "email": "fatima@example.com",
+            "password": "password123",
+            "role": "guest",
+            "balance": 0.0
+        },
+        "6": {
+            "id": 6,
+            "name": "Hafid",
+            "email": "omar@example.com",
+            "password": "password123",
+            "role": "guest",
+            "balance": 0.0
+        }
+    },
+    "locations": {
+        "1": {
+            "id": 1,
+            "name": "Maravale"
+        },
+        "2": {
+            "id": 2,
+            "name": "Es_senai"
+        },
+        "3": {
+            "id": 3,
+            "name": "Usto"
+        }
+    },
+    "rooms": {
+        "1": {
+            "id": 1,
+            "name": "Salle de formation",
+            "location_id": 1,
+            "capacity": 15
+        },
+        "2": {
+            "id": 2,
+            "name": "Salle de réunion",
+            "location_id": 1,
+            "capacity": 10
+        },
+        "3": {
+            "id": 3,
+            "name": "Salle de bureau",
+            "location_id": 1,
+            "capacity": 20
+        },
+        "4": {
+            "id": 4,
+            "name": "Salle de conférence ",
+            "location_id": 1,
+            "capacity": 25
+        },
+        "5": {
+            "id": 5,
+            "name": "Salle de téléconférence ",
+            "location_id": 2,
+            "capacity": 8
+        },
+        "6": {
+            "id": 6,
+            "name": "Bureau individuel ",
+            "location_id": 2,
+            "capacity": 1
+        },
+        "7": {
+            "id": 7,
+            "name": "Salle de formation",
+            "location_id": 2,
+            "capacity": 20
+        },
+        "8": {
+            "id": 8,
+            "name": "Salle de réunion",
+            "location_id": 2,
+            "capacity": 12
+        },
+        "9": {
+            "id": 9,
+            "name": "Salle de bureau",
+            "location_id": 2,
+            "capacity": 27
+        },
+        "10": {
+            "id": 10,
+            "name": "Salle de conférence ",
+            "location_id": 2,
+            "capacity": 25
+        },
+        "11": {
+            "id": 11,
+            "name": "Salle de téléconférence ",
+            "location_id": 2,
+            "capacity": 12
+        },
+        "12": {
+            "id": 12,
+            "name": "Bureau individuel ",
+            "location_id": 2,
+            "capacity": 1
+        },
+        "13": {
+            "id": 13,
+            "name": "Salle de formation",
+            "location_id": 3,
+            "capacity": 22
+        },
+        "14": {
+            "id": 14,
+            "name": "Salle de réunion",
+            "location_id": 3,
+            "capacity": 10
+        },
+        "15": {
+            "id": 15,
+            "name": "Salle de bureau",
+            "location_id": 3,
+            "capacity": 22
+        },
+        "16": {
+            "id": 16,
+            "name": "Salle de conférence ",
+            "location_id": 3,
+            "capacity": 23
+        },
+        "17": {
+            "id": 17,
+            "name": "Salle de téléconférence ",
+            "location_id": 3,
+            "capacity": 12
+        },
+        "18": {
+            "id": 18,
+            "name": "Bureau individuel ",
+            "location_id": 3,
+            "capacity": 1
+        }
+    },
+    "bookings": {
+        "1": {
+            "id": 1,
+            "user_id": 2,
+            "room_id": 8,
+            "date": "2025-06-02",
+            "time_slot": "16:00-17:00"
+        },
+        "2": {
+            "id": 2,
+            "user_id": 3,
+            "room_id": 7,
+            "date": "2025-06-03",
+            "time_slot": "04:00-05:00"
+        },
+        "3": {
+            "id": 3,
+            "user_id": 4,
+            "room_id": 10,
+            "date": "2025-06-01",
+            "time_slot": "15:00-16:00"
+        },
+        "4": {
+            "id": 4,
+            "user_id": 2,
+            "room_id": 3,
+            "date": "2025-05-26",
+            "time_slot": "09:00-10:00"
+        },
+        "5": {
+            "id": 5,
+            "user_id": 4,
+            "room_id": 3,
+            "date": "2025-05-25",
+            "time_slot": "07:00-08:00"
+        },
+        "6": {
+            "id": 6,
+            "user_id": 3,
+            "room_id": 5,
+            "date": "2025-05-23",
+            "time_slot": "09:00-10:00"
+        },
+        "7": {
+            "id": 7,
+            "user_id": 4,
+            "room_id": 1,
+            "date": "2025-05-23",
+            "time_slot": "14:00-15:00"
+        },
+        "8": {
+            "id": 8,
+            "user_id": 4,
+            "room_id": 1,
+            "date": "2025-05-25",
+            "time_slot": "21:00-22:00"
+        },
+        "9": {
+            "id": 9,
+            "user_id": 4,
+            "room_id": 9,
+            "date": "2025-05-27",
+            "time_slot": "02:00-03:00"
+        },
+        "10": {
+            "id": 10,
+            "user_id": 2,
+            "room_id": 4,
+            "date": "2025-05-25",
+            "time_slot": "06:00-07:00"
+        },
+        "11": {
+            "id": 11,
+            "user_id": 3,
+            "room_id": 9,
+            "date": "2025-05-20",
+            "time_slot": "21:00-22:00"
+        },
+        "12": {
+            "id": 12,
+            "user_id": 2,
+            "room_id": 7,
+            "date": "2025-05-20",
+            "time_slot": "22:00-23:00"
+        },
+        "13": {
+            "id": 13,
+            "user_id": 4,
+            "room_id": 2,
+            "date": "2025-05-20",
+            "time_slot": "13:00-14:00"
+        },
+        "14": {
+            "id": 14,
+            "user_id": 4,
+            "room_id": 3,
+            "date": "2025-05-24",
+            "time_slot": "06:00-07:00"
+        },
+        "15": {
+            "id": 15,
+            "user_id": 4,
+            "room_id": 8,
+            "date": "2025-05-24",
+            "time_slot": "11:00-12:00"
+        },
+        "16": {
+            "id": 16,
+            "user_id": 3,
+            "room_id": 1,
+            "date": "2025-06-02",
+            "time_slot": "14:00-15:00"
+        },
+        "17": {
+            "id": 17,
+            "user_id": 4,
+            "room_id": 1,
+            "date": "2025-05-28",
+            "time_slot": "10:00-11:00"
+        },
+        "18": {
+            "id": 18,
+            "user_id": 2,
+            "room_id": 10,
+            "date": "2025-05-20",
+            "time_slot": "09:00-10:00"
+        },
+        "19": {
+            "id": 19,
+            "user_id": 2,
+            "room_id": 4,
+            "date": "2025-06-01",
+            "time_slot": "14:00-15:00"
+        },
+        "20": {
+            "id": 20,
+            "user_id": 2,
+            "room_id": 2,
+            "date": "2025-06-03",
+            "time_slot": "17:00-18:00"
+        }
+    },
+    "recharges": {
+        "1": {
+            "id": 1,
+            "user_id": 2,
+            "amount": 200.0,
+            "date": "2025-05-10 11:06:04"
+        },
+        "2": {
+            "id": 2,
+            "user_id": 2,
+            "amount": 300.0,
+            "date": "2025-05-15 11:06:04"
+        },
+        "3": {
+            "id": 3,
+            "user_id": 3,
+            "amount": 300.0,
+            "date": "2025-05-13 11:06:04"
+        },
+        "4": {
+            "id": 4,
+            "user_id": 4,
+            "amount": 150.0,
+            "date": "2025-05-17 11:06:04"
+        }
+    },
+    "expenses": {
+        "1": {
+            "id": 1,
+            "user_id": 2,
+            "amount": 50.0,
+            "booking_id": 1,
+            "date": "2025-05-12 11:06:04"
+        },
+        "2": {
+            "id": 2,
+            "user_id": 2,
+            "amount": 25.0,
+            "booking_id": 3,
+            "date": "2025-05-14 11:06:04"
+        },
+        "3": {
+            "id": 3,
+            "user_id": 3,
+            "amount": 100.0,
+            "booking_id": 5,
+            "date": "2025-05-16 11:06:04"
+        },
+        "4": {
+            "id": 4,
+            "user_id": 4,
+            "amount": 75.0,
+            "booking_id": 7,
+            "date": "2025-05-18 11:06:04"
+        }
+    }
+}
