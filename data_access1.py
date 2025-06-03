@@ -152,3 +152,21 @@ def create_recharge(data):
 
 def get_all_recharges():
     return Recharge.query.all()
+
+def update_recharge(recharge_id, data):
+    recharge = Recharge.query.get(recharge_id)
+    if not recharge:
+        return None
+    recharge.user_id = data.get('user_id', recharge.user_id)
+    recharge.amount = data.get('amount', recharge.amount)
+    recharge.date = data.get('date', recharge.date)
+    db.session.commit()
+    return recharge
+
+def delete_recharge(recharge_id):
+    recharge = Recharge.query.get(recharge_id)
+    if not recharge:
+        return False
+    db.session.delete(recharge)
+    db.session.commit()
+    return True
