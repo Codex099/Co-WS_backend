@@ -1,5 +1,6 @@
-from models import db, User
+from models import db, User, Location, Room, Booking, Recharge
 
+#user
 def get_user_by_email(email):
     return User.query.filter_by(email=email).first()
 
@@ -7,7 +8,7 @@ def create_user(data):
     user = User(
         name=data['name'],
         email=data['email'],
-        number=data['number'],  
+        number=data['number'],
         password=data['password'],
         role=data.get('role', 'user'),
         balance=data.get('balance', 0.0)
@@ -18,3 +19,136 @@ def create_user(data):
 
 def get_all_users():
     return User.query.all()
+
+def update_user(user_id, data):
+    user = User.query.get(user_id)
+    if not user:
+        return None
+    user.name = data.get('name', user.name)
+    user.email = data.get('email', user.email)
+    user.number = data.get('number', user.number)
+    user.password = data.get('password', user.password)
+    user.role = data.get('role', user.role)
+    user.balance = data.get('balance', user.balance)
+    db.session.commit()
+    return user
+
+def delete_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return False
+    db.session.delete(user)
+    db.session.commit()
+    return True
+
+#loaction
+def create_location(data):
+    location = Location(name=data['name'])
+    db.session.add(location)
+    db.session.commit()
+    return location
+
+def get_all_locations():
+    return Location.query.all()
+
+def update_location(location_id, data):
+    location = Location.query.get(location_id)
+    if not location:
+        return None
+    location.name = data.get('name', location.name)
+    db.session.commit()
+    return location
+
+def delete_location(location_id):
+    location = Location.query.get(location_id)
+    if not location:
+        return False
+    db.session.delete(location)
+    db.session.commit()
+    return True
+
+#Room
+def create_room(data):
+    room = Room(
+        name=data['name'],
+        location_id=data['location_id'],
+        capacity=data['capacity'],
+        hourly_price=data.get('hourly_price')
+    )
+    db.session.add(room)
+    db.session.commit()
+    return room
+
+def get_all_rooms():
+    return Room.query.all()
+
+def update_room(room_id, data):
+    room = Room.query.get(room_id)
+    if not room:
+        return None
+    room.name = data.get('name', room.name)
+    room.capacity = data.get('capacity', room.capacity)
+    room.hourly_price = data.get('hourly_price', room.hourly_price)
+    room.location_id = data.get('location_id', room.location_id)
+    db.session.commit()
+    return room
+
+def delete_room(room_id):
+    room = Room.query.get(room_id)
+    if not room:
+        return False
+    db.session.delete(room)
+    db.session.commit()
+    return True
+
+#Booking 
+def create_booking(data):
+    booking = Booking(
+        user_id=data['user_id'],
+        room_id=data['room_id'],
+        date=data['date'],
+        start_time=data['start_time'],
+        end_time=data['end_time'],
+        total_price=data.get('total_price')
+    )
+    db.session.add(booking)
+    db.session.commit()
+    return booking
+
+def get_all_bookings():
+    return Booking.query.all()
+
+def update_booking(booking_id, data):
+    booking = Booking.query.get(booking_id)
+    if not booking:
+        return None
+    booking.user_id = data.get('user_id', booking.user_id)
+    booking.room_id = data.get('room_id', booking.room_id)
+    booking.date = data.get('date', booking.date)
+    booking.start_time = data.get('start_time', booking.start_time)
+    booking.end_time = data.get('end_time', booking.end_time)
+    booking.total_price = data.get('total_price', booking.total_price)
+    db.session.commit()
+    return booking
+
+def delete_booking(booking_id):
+    booking = Booking.query.get(booking_id)
+    if not booking:
+        return False
+    db.session.delete(booking)
+    db.session.commit()
+    return True
+
+#Recharge
+def create_recharge(data):
+    recharge = Recharge(
+        user_id=data['user_id'],
+        amount=data['amount'],
+        date=data.get('date')
+    )
+    db.session.add(recharge)
+    db.session.commit()
+    return recharge
+
+def get_all_recharges():
+    return Recharge.query.all()

@@ -10,7 +10,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     number = db.Column(db.Integer,unique=True,nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    role = db.Column(db.String(20), default='guest')
+    role = db.Column(db.String(20), default='Normal user')
     balance = db.Column(db.Float, default=0.0)
     bookings = db.relationship('Booking', backref='user', lazy=True)
     recharges = db.relationship('Recharge', backref='user', lazy=True)
@@ -20,17 +20,15 @@ class Location(db.Model):
     __tablename__ = 'locations'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-
     rooms = db.relationship('Room', backref='location', lazy=True)
 
 class Room(db.Model):
     __tablename__ = 'rooms'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     hourly_price = db.Column(db.Float, nullable=True)  
-
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
     bookings = db.relationship('Booking', backref='room', lazy=True)
 
 class Booking(db.Model):
@@ -43,19 +41,9 @@ class Booking(db.Model):
     end_time = db.Column(db.Time, nullable=False)    
     total_price = db.Column(db.Float, nullable=True) 
 
-    expense = db.relationship('Expense', backref='booking', uselist=False)
-
-class Recharge(db.Model):
+class Recharge(db.Model):   #ychof + ymodifier
     __tablename__ = 'recharges'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
-
-class Expense(db.Model):
-    __tablename__ = 'expenses'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    booking_id = db.Column(db.Integer, db.ForeignKey('bookings.id'), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
