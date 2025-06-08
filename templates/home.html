@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Admin Dashboard</h1>
+    <div class="mt-4">
+        <h2>Manage Users</h2>
+        <a href="{{ url_for('admin_bp.users_page') }}" class="btn btn-primary">View Users</a>
+    </div>
+    <div class="mt-4">
+        <h2>Manage Locations</h2>
+        <a href="{{ url_for('admin_bp.locations_page') }}" class="btn btn-primary">View Locations</a>
+    </div>
+    <div class="mt-4">
+        <h2>Manage Rooms</h2>
+        <a href="{{ url_for('admin_bp.rooms_page') }}" class="btn btn-primary">View Rooms</a>
+    </div>
+</div>
+</body>
+</html>

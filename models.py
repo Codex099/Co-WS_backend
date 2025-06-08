@@ -14,7 +14,6 @@ class User(db.Model):
     balance = db.Column(db.Float, default=0.0)
     bookings = db.relationship('Booking', backref='user', lazy=True)
     recharges = db.relationship('Recharge', backref='user', lazy=True)
-    expenses = db.relationship('Expense', backref='user', lazy=True)
 
 class Location(db.Model):
     __tablename__ = 'locations'
@@ -27,7 +26,8 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
-    hourly_price = db.Column(db.Float, nullable=True)  
+    slot_price = db.Column(db.Float, nullable=False)  
+    slot_duration =db.Column(db.Integer,nullable=False,default=60)  #ppar défault 1h
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
     bookings = db.relationship('Booking', backref='room', lazy=True)
 
@@ -38,7 +38,7 @@ class Booking(db.Model):
     room_id = db.Column(db.Integer, db.ForeignKey('rooms.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)  
     start_time = db.Column(db.Time, nullable=False)  
-    end_time = db.Column(db.Time, nullable=False)    
+    slot_count = db.Column(db.Integer, nullable=False)    # nombre de slot réservé
     total_price = db.Column(db.Float, nullable=True) 
 
 class Recharge(db.Model):   #ychof + ymodifier

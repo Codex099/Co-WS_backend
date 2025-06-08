@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Locations</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Manage Locations</h1>
+    
+    <form method="POST" action="{{ url_for('admin_bp.create_location_admin') }}" class="form-inline mb-4">
+        <input type="text" name="name" class="form-control mr-2" placeholder="Location Name" required>
+        <button type="submit" class="btn btn-primary">Add Location</button>
+    </form>
+
+    <h2 class="mt-5">Existing Locations</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for location in locations %}
+            <tr>
+                <td>{{ location.id }}</td>
+                <td>
+                    <a href="{{ url_for('admin_bp.location_rooms', location_id=location.id) }}">
+                        {{ location.name }}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('admin_bp.admin_home') }}" class="btn btn-secondary mb-4">Back to Admin Home</a>
+</div>
+</body>
+</html>

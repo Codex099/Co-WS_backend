@@ -18,7 +18,19 @@ def create_user(data):
     return user
 
 def get_all_users():
-    return User.query.all()
+    users = User.query.all()
+    result = []
+    for user in users:
+        balance = get_user_balance(user.id)
+        result.append({
+            'id': user.id,
+            'name': user.name,
+            'email': user.email,
+            'number': user.number,
+            'role': user.role,
+            'balance': balance
+        })
+    return result
 
 def update_user(user_id, data):
     user = User.query.get(user_id)
@@ -29,7 +41,6 @@ def update_user(user_id, data):
     user.number = data.get('number', user.number)
     user.password = data.get('password', user.password)
     user.role = data.get('role', user.role)
-    user.balance = data.get('balance', user.balance)
     db.session.commit()
     return user
 
@@ -40,6 +51,28 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return True
+
+def get_user_balance(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return 0.0
+    total_recharge = db.session.query(db.func.sum(Recharge.amount)).filter_by(user_id=user_id).scalar() or 0.0
+    return user.balance + total_recharge
+
+def get_user_by_id(user_id):
+    return User.query.get(user_id)
+
+def create_recharge(data):
+    recharge = Recharge(
+        user_id=data['user_id'],
+        amount=data['amount']
+    )
+    db.session.add(recharge)
+    db.session.commit()
+    return recharge
+
+def save_user(user):
+    db.session.commit()
 
 #loaction
 def create_location(data):
@@ -73,7 +106,8 @@ def create_room(data):
         name=data['name'],
         location_id=data['location_id'],
         capacity=data['capacity'],
-        hourly_price=data.get('hourly_price')
+        slot_price=data.get('slot_price'),
+        slot_duration=data.get('slot_duration'),
     )
     db.session.add(room)
     db.session.commit()
@@ -90,6 +124,7 @@ def update_room(room_id, data):
     room.capacity = data.get('capacity', room.capacity)
     room.hourly_price = data.get('hourly_price', room.hourly_price)
     room.location_id = data.get('location_id', room.location_id)
+    room.slot_price = data.get('slot_price', room.slot_price)
     db.session.commit()
     return room
 
@@ -108,7 +143,7 @@ def create_booking(data):
         room_id=data['room_id'],
         date=data['date'],
         start_time=data['start_time'],
-        end_time=data['end_time'],
+        slot_count=data['slot_count'],
         total_price=data.get('total_price')
     )
     db.session.add(booking)
@@ -170,3 +205,6 @@ def delete_recharge(recharge_id):
     db.session.delete(recharge)
     db.session.commit()
     return True
+
+def get_user_recharges(user_id):
+    return Recharge.query.filter_by(user_id=user_id).order_by(Recharge.date.desc()).all()

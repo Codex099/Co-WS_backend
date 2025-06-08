@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Rooms</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Manage Rooms</h1>
+    
+    <h2 class="mt-4">Add New Room</h2>
+    <form action="{{ url_for('admin_bp.create_room_admin') }}" method="POST">
+        <div class="form-row">
+            <div class="col"><input type="text" name="name" class="form-control" placeholder="Room Name" required></div>
+            <div class="col"><input type="number" name="capacity" class="form-control" placeholder="Capacity" required></div>
+            <div class="col"><input type="number" step="0.01" name="slot_price" class="form-control" placeholder="Slot Price" required></div>
+            <div class="col"><input type="number" name="slot_duration" class="form-control" placeholder="Slot Duration (min)" value="60" required></div>
+            <div class="col">
+                <select name="location_id" class="form-control" required>
+                    {% for location in locations %}
+                    <option value="{{ location.id }}">{{ location.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col"><button type="submit" class="btn btn-primary">Add Room</button></div>
+        </div>
+    </form>
+
+    <h2 class="mt-5">Existing Rooms</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Capacity</th>
+                <th>Slot Price</th>
+                <th>Slot Duration</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for room in rooms %}
+            <tr>
+                <td>{{ room.id }}</td>
+                <td>{{ room.name }}</td>
+                <td>{{ room.capacity }}</td>
+                <td>{{ room.slot_price }}</td>
+                <td>{{ room.slot_duration }}</td>
+                <td>{{ room.location.name }}</td>
+                <td>
+                    <form action="{{ url_for('admin_bp.delete_room_admin', room_id=room.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('admin_bp.admin_home') }}" class="btn btn-secondary mb-4">Back to Admin Home</a>
+</div>
+</body>
+</html>

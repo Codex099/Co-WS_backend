@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>User: {{ user.name }} ({{ user.email }})</h2>
+    <p><strong>Numéro:</strong> {{ user.number }}</p>
+    <p><strong>Rôle:</strong> {{ user.role }}</p>
+    <p><strong>Solde actuel:</strong> {{ balance }} DZD</p>
+
+    <h4>Ajouter une recharge</h4>
+    <form method="post" action="{{ url_for('admin_bp.update_balance', user_id=user.id) }}" class="form-inline mb-3">
+        <input type="number" step="0.01" name="balance" class="form-control mr-2" placeholder="Montant à ajouter (+/-)">
+        <button type="submit" class="btn btn-success">Ajouter</button>
+    </form>
+
+    <h4>Historique des recharges</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for recharge in recharges %}
+            <tr>
+                <td>{{ recharge.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ recharge.amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('admin_bp.users_page') }}" class="btn btn-secondary">Retour à la liste</a>
+</div>
+</body>
+</html>
