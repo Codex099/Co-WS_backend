@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from bcns_logique import create_user, list_users, get_user_by_email, login_user, signup_request, confirm_signup, create_booking, get_available_slots_range
+from bcns_logique import create_user, get_user_by_email, login_user, signup_request, confirm_signup, create_booking, get_available_slots_range
 
 bp = Blueprint('bp', __name__)
 
@@ -12,10 +12,6 @@ def create_user_route():
     data = request.json
     resp, code = create_user(data)
     return jsonify(resp), code
-
-@bp.route('/users', methods=['GET']) #for admin
-def list_users_route():
-    return jsonify(list_users())
 
 @bp.route('/users/email/<email>', methods=['GET'])
 def get_user_by_email_route(email):

@@ -74,6 +74,9 @@ def create_recharge(data):
 def save_user(user):
     db.session.commit()
 
+def get_user_by_number(number):
+    return User.query.filter_by(number=number).first()
+
 #loaction
 def create_location(data):
     location = Location(name=data['name'])
