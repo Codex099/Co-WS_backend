@@ -9,8 +9,9 @@
 <div class="container mt-5">
     <h1>Manage Locations</h1>
     
-    <form method="POST" action="{{ url_for('admin_bp.create_location_admin') }}" class="form-inline mb-4">
+    <form method="POST" action="{{ url_for('admin_bp.create_location_admin') }}" class="form-inline mb-4" enctype="multipart/form-data">
         <input type="text" name="name" class="form-control mr-2" placeholder="Location Name" required>
+        <input type="file" name="image" class="form-control mr-2" accept="image/*" required>
         <button type="submit" class="btn btn-primary">Add Location</button>
     </form>
 
@@ -19,7 +20,9 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Image</th>
                 <th>Name</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -27,9 +30,21 @@
             <tr>
                 <td>{{ location.id }}</td>
                 <td>
+                    {% if location.image_data %}
+                        <img src="data:image/jpeg;base64,{{ location.image_data|b64encode }}" alt="Location image" style="width:80px; height:auto;">
+                    {% else %}
+                        <span>No image</span>
+                    {% endif %}
+                </td>
+                <td>
                     <a href="{{ url_for('admin_bp.location_rooms', location_id=location.id) }}">
                         {{ location.name }}
                     </a>
+                </td>
+                <td>
+                    <form action="{{ url_for('admin_bp.delete_location_admin', location_id=location.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

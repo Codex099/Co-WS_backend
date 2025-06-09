@@ -19,6 +19,7 @@ class Location(db.Model):
     __tablename__ = 'locations'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    image_data = db.Column(db.LargeBinary, nullable=True) #largebinary -----> pour image
     rooms = db.relationship('Room', backref='location', lazy=True)
 
 class Room(db.Model):
@@ -30,6 +31,7 @@ class Room(db.Model):
     slot_duration =db.Column(db.Integer,nullable=False,default=60)  #ppar défault 1h
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
     bookings = db.relationship('Booking', backref='room', lazy=True)
+    image_data = db.Column(db.LargeBinary)  
 
 class Booking(db.Model):
     __tablename__ = 'bookings'

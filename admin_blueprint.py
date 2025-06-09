@@ -70,20 +70,32 @@ def create_user_admin():
 @admin_bp.route('/locations', methods=['POST'])
 def create_location_admin():
     name = request.form['name']
-    create_location({'name': name})
+    image_file = request.files.get('image')
+    image_data = None
+    if image_file:
+        image_data = image_file.read()
+    create_location({'name': name, 'image_data': image_data})
     return redirect(url_for('admin_bp.locations_page'))
 
 
 @admin_bp.route('/rooms', methods=['POST'])
 def create_room_admin():
-    data = {
-        'name': request.form['name'],
-        'capacity': request.form['capacity'],
-        'slot_price': request.form['slot_price'],
-        'slot_duration': request.form['slot_duration'],
-        'location_id': request.form['location_id'],
-    }
-    create_room(data)
+    name = request.form['name']
+    capacity = request.form['capacity']
+    slot_price = request.form['slot_price']
+    slot_duration = request.form['slot_duration']
+    location_id = request.form['location_id']
+    image = request.files.get('image')
+    image_data = image.read() if image else None
+
+    create_room({
+        'name': name,
+        'capacity': capacity,
+        'slot_price': slot_price,
+        'slot_duration': slot_duration,
+        'location_id': location_id,
+        'image_data': image_data
+    })
     return redirect(url_for('admin_bp.rooms_page'))
 
 
@@ -97,6 +109,13 @@ def delete_room_admin(room_id):
 def delete_user_admin(user_id):
     delete_user(user_id)
     return redirect(url_for('admin_bp.users_page'))
+
+
+@admin_bp.route('/locations/delete/<int:location_id>', methods=['POST'])
+def delete_location_admin(location_id):
+    from data_access1 import delete_location
+    delete_location(location_id)
+    return redirect(url_for('admin_bp.locations_page'))
 
 
 @admin_bp.route('/users/<int:user_id>')

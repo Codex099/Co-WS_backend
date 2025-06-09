@@ -79,7 +79,11 @@ def get_user_by_number(number):
 
 #loaction
 def create_location(data):
-    location = Location(name=data['name'])
+    image_data = data.get('image_data')  #  binaire
+    location = Location(
+        name=data['name'],
+        image_data=image_data
+    )
     db.session.add(location)
     db.session.commit()
     return location
@@ -107,10 +111,11 @@ def delete_location(location_id):
 def create_room(data):
     room = Room(
         name=data['name'],
-        location_id=data['location_id'],
         capacity=data['capacity'],
-        slot_price=data.get('slot_price'),
-        slot_duration=data.get('slot_duration'),
+        slot_price=data['slot_price'],
+        slot_duration=data['slot_duration'],
+        location_id=data['location_id'],
+        image_data=data.get('image_data')
     )
     db.session.add(room)
     db.session.commit()

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from bcns_logique import create_user, get_user_by_email, login_user, signup_request, confirm_signup, create_booking, get_available_slots_range
+from bcns_logique import create_user, get_user_by_email, login_user, signup_request, confirm_signup, create_booking, get_available_slots_range, get_all_locations, get_user_by_id, update_user_by_id
 
 bp = Blueprint('bp', __name__)
 
@@ -50,5 +50,27 @@ def available_slots_range_route(room_id):
     end = request.args.get('end')      # format 'YYYY-MM-DD'
     resp, code = get_available_slots_range(room_id, start, end)
     return jsonify(resp), code
-    
+
+@bp.route('/locations', methods=['GET'])
+def get_all_locations_route():
+    resp, code = get_all_locations()
+    return jsonify(resp), code
+
+@bp.route('/rooms/by-location/<location_name>', methods=['GET'])
+def rooms_by_location_name_route(location_name):
+    from bcns_logique import get_rooms_by_location_name
+    resp, code = get_rooms_by_location_name(location_name)
+    return jsonify(resp), code
+
+@bp.route('/users/<int:user_id>', methods=['GET'])
+def get_user_by_id_route(user_id):
+    resp, code = get_user_by_id(user_id)
+    return jsonify(resp), code
+
+@bp.route('/users/<int:user_id>', methods=['PUT'])
+def update_user_by_id_route(user_id):
+    data = request.json
+    resp, code = update_user_by_id(user_id, data)
+    return jsonify(resp), code
+
 

@@ -1,6 +1,7 @@
 import data_access1
 import random
 from datetime import datetime, timedelta, time
+import base64
 
 # Pour stocker temporairement les codes et les données d'inscription
 signup_codes = {}
@@ -25,12 +26,14 @@ def get_user_by_email(email):
     user = data_access1.get_user_by_email(email)
     if not user:
         return {"error": "User not found"}, 404
+    balance = data_access1.get_user_balance(user.id)
     return {
         "id": user.id,
         "name": user.name,
         "email": user.email,
         "role": user.role,
-        "balance": user.balance
+        "balance": balance,
+        "number": user.number   # <-- ce champ doit être présent ici
     }, 200
 
 def login_user(data):
@@ -185,4 +188,66 @@ def create_recharge(data):
     data_access1.save_user(user)
 
     return {"message": "Recharge successful", "new_balance": user.balance}, 201
+
+def get_all_locations():
+    locations = data_access1.get_all_locations()
+    result = []
+    for loc in locations:
+        image_base64 = None
+        if loc.image_data:
+            image_base64 = base64.b64encode(loc.image_data).decode('utf-8')
+        result.append({
+            "id": loc.id,
+            "name": loc.name,
+            "image_base64": image_base64
+        })
+    return result, 200
+
+def get_rooms_by_location_name(location_name):
+    # Trouver la location par nom
+    location = next((loc for loc in data_access1.get_all_locations() if loc.name == location_name), None)
+    if not location:
+        return {"error": "Location not found"}, 404
+
+    # Récupérer les rooms de cette location
+    rooms = [room for room in data_access1.get_all_rooms() if room.location_id == location.id]
+    result = []
+    for room in rooms:
+        image_base64 = None
+        if getattr(room, "image_data", None):
+            import base64
+            image_base64 = base64.b64encode(room.image_data).decode('utf-8')
+        result.append({
+            "id": room.id,
+            "name": room.name,
+            "capacity": room.capacity,
+            "slot_price": room.slot_price,
+            "slot_duration": room.slot_duration,
+            "image_base64": image_base64
+        })
+    return result, 200
+
+def get_user_by_id(user_id):
+    user = data_access1.get_user_by_id(user_id)
+    if not user:
+        return {"error": "User not found"}, 404
+    balance = data_access1.get_user_balance(user.id)
+    return {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "role": user.role,
+        "balance": balance,
+        "number": user.number
+    }, 200
+
+def update_user_by_id(user_id, data):
+    user = data_access1.get_user_by_id(user_id)
+    if not user:
+        return {"error": "User not found"}, 404
+    user.name = data.get('name', user.name)
+    user.email = data.get('email', user.email)
+    user.number = data.get('number', user.number)
+    data_access1.save_user(user)
+    return {"message": "User updated"}, 200
 
