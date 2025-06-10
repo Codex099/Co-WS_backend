@@ -1,4 +1,5 @@
 from models import db, User, Location, Room, Booking, Recharge
+from datetime import datetime
 
 #user
 def get_user_by_email(email):
@@ -11,7 +12,7 @@ def create_user(data):
         number=data['number'],
         password=data['password'],
         role=data.get('role', 'user'),
-        balance=data.get('balance', 0.0)
+        balance=data.get('balance', 0.0)  # <-- ici
     )
     db.session.add(user)
     db.session.commit()
@@ -56,18 +57,21 @@ def get_user_balance(user_id):
     user = User.query.get(user_id)
     if not user:
         return 0.0
-    total_recharge = db.session.query(db.func.sum(Recharge.amount)).filter_by(user_id=user_id).scalar() or 0.0
-    return user.balance + total_recharge
+    return user.balance
 
 def get_user_by_id(user_id):
     return User.query.get(user_id)
 
 def create_recharge(data):
-    recharge = Recharge(
-        user_id=data['user_id'],
-        amount=data['amount']
-    )
+    user = get_user_by_id(data['user_id'])
+    if not user:
+        return None
+    # Créer la recharge
+    recharge = Recharge(user_id=user.id, amount=data['amount'], date=datetime.utcnow())
     db.session.add(recharge)
+    # Mettre à jour le solde
+    user.balance += data['amount']
+    db.session.add(user)
     db.session.commit()
     return recharge
 
@@ -146,11 +150,21 @@ def delete_room(room_id):
 
 #Booking 
 def create_booking(data):
+    # Conversion explicite
+    if isinstance(data['date'], str):
+        date_obj = datetime.strptime(data['date'], "%Y-%m-%d").date()
+    else:
+        date_obj = data['date']
+    if isinstance(data['start_time'], str):
+        time_obj = datetime.strptime(data['start_time'], "%H:%M").time()
+    else:
+        time_obj = data['start_time']
+
     booking = Booking(
         user_id=data['user_id'],
         room_id=data['room_id'],
-        date=data['date'],
-        start_time=data['start_time'],
+        date=date_obj,
+        start_time=time_obj,
         slot_count=data['slot_count'],
         total_price=data.get('total_price')
     )
@@ -184,12 +198,15 @@ def delete_booking(booking_id):
 
 #Recharge
 def create_recharge(data):
-    recharge = Recharge(
-        user_id=data['user_id'],
-        amount=data['amount'],
-        date=data.get('date')
-    )
+    user = get_user_by_id(data['user_id'])
+    if not user:
+        return None
+    # Créer la recharge
+    recharge = Recharge(user_id=user.id, amount=data['amount'], date=datetime.utcnow())
     db.session.add(recharge)
+    # Mettre à jour le solde
+    user.balance += data['amount']
+    db.session.add(user)
     db.session.commit()
     return recharge
 
@@ -216,3 +233,7 @@ def delete_recharge(recharge_id):
 
 def get_user_recharges(user_id):
     return Recharge.query.filter_by(user_id=user_id).order_by(Recharge.date.desc()).all()
+
+def recharge_user_balance(user, amount):
+    user.balance += amount
+    save_user(user)

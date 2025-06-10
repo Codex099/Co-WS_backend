@@ -39,7 +39,7 @@ class Booking(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     room_id = db.Column(db.Integer, db.ForeignKey('rooms.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)  
-    start_time = db.Column(db.Time, nullable=False)  
+    start_time = db.Column(db.Time, nullable=False)
     slot_count = db.Column(db.Integer, nullable=False)    # nombre de slot réservé
     total_price = db.Column(db.Float, nullable=True) 
 
