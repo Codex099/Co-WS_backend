@@ -1,6 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from data_access1 import (
-    get_all_users,
     get_all_locations,
     get_all_rooms,
     get_user_by_email,
@@ -12,12 +11,14 @@ from data_access1 import (
     delete_room,
     get_user_balance,
     get_user_recharges,
+    get_all_users,  
 )
 
 admin_bp = Blueprint('admin_bp', __name__, url_prefix='/admin')
 
 
 @admin_bp.route('/')
+
 def admin_home():
     return render_template('home.html')
 
@@ -136,5 +137,18 @@ def location_rooms(location_id):
         return "Location not found", 404
     rooms = [room for room in get_all_rooms() if room.location_id == location_id]
     return render_template('location_rooms.html', location=location, rooms=rooms)
+
+
+@admin_bp.route('/bookings')
+def bookings_page():
+    from data_access1 import get_all_bookings
+    search_email = request.args.get('search_email', '').strip().lower()
+    bookings = get_all_bookings()
+    if search_email:
+        bookings = [b for b in bookings if b.user and b.user.email and search_email in b.user.email.lower()]
+    return render_template('bookings.html', bookings=bookings)
+
+
+
 
 

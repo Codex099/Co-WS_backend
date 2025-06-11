@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookings</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>All Bookings</h2>
+
+    <!-- Formulaire de recherche par email -->
+    <form method="get" class="form-inline mb-3">
+        <input type="text" name="search_email" class="form-control mr-2" placeholder="Search by user email" value="{{ request.args.get('search_email', '') }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="{{ url_for('admin_bp.bookings_page') }}" class="btn btn-secondary ml-2">Reset</a>
+    </form>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User Email</th>
+                <th>Room</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Total Price</th>
+                <th>Expiration</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.user.email }}</td>
+                <td>{{ booking.room.name }}</td>
+                <td>{{ booking.start_time.strftime('%H:%M') }}</td>
+                <td>
+                    {% set total_minutes = booking.start_time.minute + booking.slot_count * booking.room.slot_duration %}
+                    {% set end_hour = booking.start_time.hour + (total_minutes // 60) %}
+                    {% set end_minute = total_minutes % 60 %}
+                    {{ end_hour|string|zfill(2) }}:{{ end_minute|string|zfill(2) }}
+                </td>
+                <td>{{ booking.total_price }}</td>
+                <td>
+                    {{ booking.date }} {{ end_hour|string|zfill(2) }}:{{ end_minute|string|zfill(2) }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

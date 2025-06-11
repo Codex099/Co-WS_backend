@@ -5,7 +5,7 @@ from sqlalchemy import text
 from models import db
 from bleu_print import bp
 from flask_cors import CORS   
-from admin_blueprint import admin_bp
+from admin_bcnslg_bleu import admin_bp
 from flask_migrate import Migrate
 
 app = Flask(__name__)
@@ -23,6 +23,10 @@ def b64encode_filter(data):
     if data:
         return base64.b64encode(data).decode('utf-8')
     return ''
+
+@app.template_filter('zfill')
+def zfill_filter(s, width=2):
+    return str(s).zfill(width)
 
 if __name__ == '__main__':
     with app.app_context():

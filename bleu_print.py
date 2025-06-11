@@ -73,4 +73,10 @@ def update_user_by_id_route(user_id):
     resp, code = update_user_by_id(user_id, data)
     return jsonify(resp), code
 
+@bp.route('/reservations/user/<int:user_id>', methods=['GET'])
+def get_user_reservations_route(user_id):
+    from bcns_logique import get_user_reservations
+    resp, code = get_user_reservations(user_id)
+    return jsonify(resp), code
+
 

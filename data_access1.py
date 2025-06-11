@@ -1,9 +1,12 @@
 from models import db, User, Location, Room, Booking, Recharge
 from datetime import datetime
 
-#user
+# --- User ---
 def get_user_by_email(email):
     return User.query.filter_by(email=email).first()
+
+def get_user_by_number(number):
+    return User.query.filter_by(number=number).first()
 
 def create_user(data):
     user = User(
@@ -12,46 +15,11 @@ def create_user(data):
         number=data['number'],
         password=data['password'],
         role=data.get('role', 'user'),
-        balance=data.get('balance', 0.0)  # <-- ici
+        balance=data.get('balance', 0.0)
     )
     db.session.add(user)
     db.session.commit()
     return user
-
-def get_all_users():
-    users = User.query.all()
-    result = []
-    for user in users:
-        balance = get_user_balance(user.id)
-        result.append({
-            'id': user.id,
-            'name': user.name,
-            'email': user.email,
-            'number': user.number,
-            'role': user.role,
-            'balance': balance
-        })
-    return result
-
-def update_user(user_id, data):
-    user = User.query.get(user_id)
-    if not user:
-        return None
-    user.name = data.get('name', user.name)
-    user.email = data.get('email', user.email)
-    user.number = data.get('number', user.number)
-    user.password = data.get('password', user.password)
-    user.role = data.get('role', user.role)
-    db.session.commit()
-    return user
-
-def delete_user(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return False
-    db.session.delete(user)
-    db.session.commit()
-    return True
 
 def get_user_balance(user_id):
     user = User.query.get(user_id)
@@ -62,28 +30,38 @@ def get_user_balance(user_id):
 def get_user_by_id(user_id):
     return User.query.get(user_id)
 
+def save_user(user):
+    db.session.commit()
+
+def delete_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return False
+    db.session.delete(user)
+    db.session.commit()
+    return True
+
+def get_all_users():
+    return User.query.all()
+
+# --- Recharge ---
 def create_recharge(data):
     user = get_user_by_id(data['user_id'])
     if not user:
         return None
-    # Créer la recharge
     recharge = Recharge(user_id=user.id, amount=data['amount'], date=datetime.utcnow())
     db.session.add(recharge)
-    # Mettre à jour le solde
     user.balance += data['amount']
     db.session.add(user)
     db.session.commit()
     return recharge
 
-def save_user(user):
-    db.session.commit()
+def get_user_recharges(user_id):
+    return Recharge.query.filter_by(user_id=user_id).order_by(Recharge.date.desc()).all()
 
-def get_user_by_number(number):
-    return User.query.filter_by(number=number).first()
-
-#loaction
+# --- Location ---
 def create_location(data):
-    image_data = data.get('image_data')  #  binaire
+    image_data = data.get('image_data')
     location = Location(
         name=data['name'],
         image_data=image_data
@@ -95,23 +73,7 @@ def create_location(data):
 def get_all_locations():
     return Location.query.all()
 
-def update_location(location_id, data):
-    location = Location.query.get(location_id)
-    if not location:
-        return None
-    location.name = data.get('name', location.name)
-    db.session.commit()
-    return location
-
-def delete_location(location_id):
-    location = Location.query.get(location_id)
-    if not location:
-        return False
-    db.session.delete(location)
-    db.session.commit()
-    return True
-
-#Room
+# --- Room ---
 def create_room(data):
     room = Room(
         name=data['name'],
@@ -148,9 +110,8 @@ def delete_room(room_id):
     db.session.commit()
     return True
 
-#Booking 
+# --- Booking ---
 def create_booking(data):
-    # Conversion explicite
     if isinstance(data['date'], str):
         date_obj = datetime.strptime(data['date'], "%Y-%m-%d").date()
     else:
@@ -196,15 +157,13 @@ def delete_booking(booking_id):
     db.session.commit()
     return True
 
-#Recharge
+# --- Recharge ---
 def create_recharge(data):
     user = get_user_by_id(data['user_id'])
     if not user:
         return None
-    # Créer la recharge
     recharge = Recharge(user_id=user.id, amount=data['amount'], date=datetime.utcnow())
     db.session.add(recharge)
-    # Mettre à jour le solde
     user.balance += data['amount']
     db.session.add(user)
     db.session.commit()
@@ -230,10 +189,3 @@ def delete_recharge(recharge_id):
     db.session.delete(recharge)
     db.session.commit()
     return True
-
-def get_user_recharges(user_id):
-    return Recharge.query.filter_by(user_id=user_id).order_by(Recharge.date.desc()).all()
-
-def recharge_user_balance(user, amount):
-    user.balance += amount
-    save_user(user)

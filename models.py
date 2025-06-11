@@ -12,15 +12,15 @@ class User(db.Model):
     password = db.Column(db.String(100), nullable=False)
     role = db.Column(db.String(20), default='Normal user')
     balance = db.Column(db.Float, default=0.0)
-    bookings = db.relationship('Booking', backref='user', lazy=True)
-    recharges = db.relationship('Recharge', backref='user', lazy=True)
+    bookings = db.relationship('Booking', backref='user') 
+    recharges = db.relationship('Recharge', backref='user')
 
 class Location(db.Model):
     __tablename__ = 'locations'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     image_data = db.Column(db.LargeBinary, nullable=True) #largebinary -----> pour image
-    rooms = db.relationship('Room', backref='location', lazy=True)
+    rooms = db.relationship('Room', backref='location')
 
 class Room(db.Model):
     __tablename__ = 'rooms'
@@ -30,7 +30,7 @@ class Room(db.Model):
     slot_price = db.Column(db.Float, nullable=False)  
     slot_duration =db.Column(db.Integer,nullable=False,default=60)  #ppar défault 1h
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
-    bookings = db.relationship('Booking', backref='room', lazy=True)
+    bookings = db.relationship('Booking', backref='room')
     image_data = db.Column(db.LargeBinary)  
 
 class Booking(db.Model):

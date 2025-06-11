@@ -86,15 +86,28 @@ def confirm_signup(email, code):
 
 
 def create_booking(data):
-    # ...vérifications, calculs, etc...
-    # Appelle la fonction du data access pour créer la réservation
+    user = data_access1.get_user_by_id(data['user_id'])
+    room = next((r for r in data_access1.get_all_rooms() if r.id == data['room_id']), None)
+    if not user or not room:
+        return {"error": "User or room not found"}, 404
+
+    slot_price = room.slot_price
+    total_price = slot_price * data['slot_count']
+
+    if user.balance < total_price:
+        return {"error": "Insufficient balance"}, 400
+
+    # Décrémente le solde
+    user.balance -= total_price
+    data_access1.save_user(user)
+
     booking = data_access1.create_booking({
         "user_id": data['user_id'],
         "room_id": data['room_id'],
         "date": data['date'],
         "start_time": data['start_time'],
         "slot_count": data['slot_count'],
-        "total_price": data["total_price"]
+        "total_price": total_price
     })
     return {"message": "Booking created", "booking_id": booking.id}, 201
 
@@ -215,4 +228,28 @@ def update_user_by_id(user_id, data):
     user.number = data.get('number', user.number)
     data_access1.save_user(user)
     return {"message": "User updated"}, 200
+
+def get_user_reservations(user_id):
+    bookings = [b for b in data_access1.get_all_bookings() if b.user_id == user_id]
+    result = []
+    for b in bookings:
+        room = data_access1.get_all_rooms()
+        room = next((r for r in room if r.id == b.room_id), None)
+        location = data_access1.get_all_locations()
+        location = next((l for l in location if l.id == room.location_id), None) if room else None
+        image_base64 = None
+        if getattr(room, "image_data", None):
+            import base64
+            image_base64 = base64.b64encode(room.image_data).decode('utf-8')
+        result.append({
+            "room_name": room.name if room else "",
+            "location": location.name if location else "",
+            "date": b.date.strftime("%Y-%m-%d"),
+            "start_time": b.start_time.strftime("%H:%M"),
+            "slot_count": b.slot_count,
+            "price": b.total_price,
+            "room_image": f"data:image/jpeg;base64,{image_base64}" if image_base64 else "",
+            "status": "Confirmed"
+        })
+    return result, 200
 
